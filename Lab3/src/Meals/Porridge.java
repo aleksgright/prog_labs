@@ -1,14 +1,14 @@
 package Meals;
 
-import utility.Ingridient;
+import utility.Ingredient;
 
 import java.util.HashSet;
 
 public class Porridge extends Meal {
-    public Porridge(Ingridient ing) {
+    public Porridge(Ingredient ing) {
         super("Porridge", ing);
-        HashSet<Ingridient> ingridients = new HashSet<>();
-        ingridients.add(Ingridient.MARMALADE);
-        setPossibleIngridients(ingridients);
+        HashSet<Ingredient> ingredients = new HashSet<>();
+        ingredients.add(Ingredient.MARMALADE);
+        setPossibleIngridients(ingredients);
     }
 }

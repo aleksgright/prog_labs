@@ -1,9 +1,9 @@
 package Meals;
 
-import utility.Ingridient;
+import utility.Ingredient;
 
 public class Kvas extends Meal {
-    public Kvas(Ingridient ing) {
+    public Kvas(Ingredient ing) {
         super("Kvas", ing);
     }
 

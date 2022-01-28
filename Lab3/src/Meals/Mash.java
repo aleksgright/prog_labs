@@ -1,15 +1,15 @@
 package Meals;
 
-import utility.Ingridient;
+import utility.Ingredient;
 
 import java.util.HashSet;
 
 public class Mash extends Meal {
-    public Mash(Ingridient ing) {
+    public Mash(Ingredient ing) {
         super("Mash", ing);
-        HashSet<Ingridient> ingridients = new HashSet<>();
-        ingridients.add(Ingridient.APPLE);
-        ingridients.add(Ingridient.PEAR);
-        setPossibleIngridients(ingridients);
+        HashSet<Ingredient> ingredients = new HashSet<>();
+        ingredients.add(Ingredient.APPLE);
+        ingredients.add(Ingredient.PEAR);
+        setPossibleIngridients(ingredients);
     }
 }

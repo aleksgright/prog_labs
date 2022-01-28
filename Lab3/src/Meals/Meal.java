@@ -1,36 +1,36 @@
 package Meals;
 
-import utility.Ingridient;
+import utility.Ingredient;
 
 import java.util.HashSet;
 import java.util.Objects;
 
 public abstract class Meal {
-    private final Ingridient ingridient;
+    private final Ingredient ingredient;
     private final String name;
-    private static final HashSet<Ingridient> possibleIngridients = new HashSet<>();
+    private static final HashSet<Ingredient> POSSIBLE_INGREDIENTS = new HashSet<>();
 
-    public Meal(String n, Ingridient ing) {
+    public Meal(String n, Ingredient ing) {
         name = n;
-        ingridient = ing;
+        ingredient = ing;
     }
 
     public String getName() {
         return name;
     }
 
-    public Ingridient getIngridient() {
-        return ingridient;
+    public Ingredient getIngridient() {
+        return ingredient;
     }
 
-    protected void setPossibleIngridients(HashSet<Ingridient> ingridients){
-        for (Ingridient ing: ingridients){
-            possibleIngridients.add(ing);
+    protected void setPossibleIngridients(HashSet<Ingredient> ingredients){
+        for (Ingredient ing: ingredients){
+            POSSIBLE_INGREDIENTS.add(ing);
         }
     }
 
-    public static HashSet<Ingridient> getPossibleIngridients() {
-        return possibleIngridients;
+    public static HashSet<Ingredient> getPossibleIngridients() {
+        return POSSIBLE_INGREDIENTS;
     }
 
     @Override
@@ -38,7 +38,7 @@ public abstract class Meal {
         if (this == o) return true;
         if (!(o instanceof Meal)) return false;
         Meal meal = (Meal) o;
-        return ingridient == meal.ingridient && Objects.equals(name, meal.name);
+        return ingredient == meal.ingredient && Objects.equals(name, meal.name);
     }
 
     @Override

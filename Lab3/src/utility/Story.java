@@ -14,9 +14,9 @@ public class Story {
         Pulka pulka = new Pulka(Location.ROOM, durka);
         pulka.callNurse(nurse);
         Cook cook = new Cook(Location.KITCHEN, durka);
-        pulka.order(nurse, new Soup(Ingridient.SWEETS));
-        pulka.order(nurse, new Porridge(Ingridient.MARMALADE));
-        pulka.order(nurse, new Cutlet(Ingridient.STRAWBERRY));
-        pulka.order(nurse, new Mash(Ingridient.APPLE));
+        pulka.order(nurse, new Soup(Ingredient.SWEETS));
+        pulka.order(nurse, new Porridge(Ingredient.MARMALADE));
+        pulka.order(nurse, new Cutlet(Ingredient.STRAWBERRY));
+        pulka.order(nurse, new Mash(Ingredient.APPLE));
     }
 }

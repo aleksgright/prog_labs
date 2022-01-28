@@ -1,9 +1,9 @@
 package Meals;
 
-import utility.Ingridient;
+import utility.Ingredient;
 
 public class Sauce extends Meal {
-    public Sauce(Ingridient ing) {
+    public Sauce(Ingredient ing) {
         super("Sauce", ing);
     }
 }

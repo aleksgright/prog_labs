@@ -2,7 +2,7 @@ package Shorties;
 
 import Meals.Kvas;
 import Meals.Meal;
-import utility.Ingridient;
+import utility.Ingredient;
 import utility.Location;
 
 public class Pulka extends Shorty {
@@ -29,7 +29,7 @@ public class Pulka extends Shorty {
             nurse.tire();
         }
         if (mealCount == 4) {
-            order(nurse, new Kvas(Ingridient.PEAR));
+            order(nurse, new Kvas(Ingredient.PEAR));
         }
         //complain(this.meal);
     }
