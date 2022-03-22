@@ -1,0 +1,29 @@
+[
+	{
+		"id": "1",		"name": "Pulp fiction",
+		"coordinates": "Coordinates{x=100.0, y=50.0}",
+		"creationDate": "Fri Apr 08 00:00:00 MSK 2022",
+		"oscarsCount": "1",
+		"genre": "HORROR",
+		"mpaaRating": "G",
+		"director": "Nolan qwerty12345 GREEN YELLOW UNITED_KINGDOM"
+	},
+	{
+		"id": "2",		"name": "Dunkerk",
+		"coordinates": "Coordinates{x=75.0, y=30.0}",
+		"creationDate": "Sat Jun 14 00:00:00 MSD 2003",
+		"oscarsCount": "5",
+		"genre": "THRILLER",
+		"mpaaRating": "PG_13",
+		"director": "Trier 1234567890 ORANGE WHITE ITALY"
+	},
+	{
+		"id": "3",		"name": "Twelve angry men",
+		"coordinates": "Coordinates{x=12.345, y=153.234}",
+		"creationDate": "Wed Nov 12 00:00:00 MSK 1975",
+		"oscarsCount": "3",
+		"genre": "FANTASY",
+		"mpaaRating": "PG_13",
+		"director": "Kaguya-Sama BrandNewId RED WHITE JAPAN"
+	}
+]
