@@ -8,25 +8,18 @@ import java.util.Hashtable;
 
 public class FileService {
     private final MovieStringConverter movieStringConverter;
-    private static final String environmentKey = "LABA";
+    private static final String ENVIRONMENT_KEY = "LABA";
     private final String filePath;
 
     public FileService() {
-        this.filePath = System.getenv("LABA");
+        // TODO вынести в аргумент конструктора
+        this.filePath = System.getenv(ENVIRONMENT_KEY);
         movieStringConverter = new MovieStringConverter();
     }
 
-//    public static void editEnvironment(String key, String value) {
-//        ProcessBuilder processBuilder = new ProcessBuilder();
-//        Map env = processBuilder.environment();
-//        env.put(key, value);
-//    }
-
     public void read(Hashtable<Integer, Movie> movieHashtable, Hashtable<String, Person> personsTable) {
         try {
-            File file = new File(filePath);
-            FileReader fileReader = new FileReader(file);
-            BufferedReader reader = new BufferedReader(fileReader);
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
             firstBlock:
             {
                 while (true) {
@@ -41,7 +34,7 @@ public class FileService {
                         dataArray[i] = jsonLineToStringData(line);
                     }
                     movieStringConverter.addMovieToTable(
-                            movieStringConverter.convertDataArrayToMovie(dataArray, personsTable),
+                            movieStringConverter.convertDataArrayToMovie(dataArray),
                             movieHashtable
                     );
                 }

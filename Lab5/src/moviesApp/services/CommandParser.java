@@ -1,93 +1,117 @@
 package moviesApp.services;
 
-import moviesApp.entities.Movie;
 import moviesApp.entities.Person;
 
 import java.util.*;
 
 public class CommandParser {
-    private Hashtable<String, Person> personsHashtable;
-    private Hashtable<Integer, Movie> moviesHashtable;
+    private final CommandExecutor commandExecutor;
 
-    public CommandParser(Hashtable<Integer, Movie> moviesHashtable, Hashtable<String, Person> personsHashtable) {
-        this.personsHashtable = personsHashtable;
-        this.moviesHashtable = moviesHashtable;
+    public CommandParser(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
     }
 
-//    private Method manageCommand(String command) {
-//        //добавить swith case для выбора команды
-//        try {
-//            Method method = getClass().getMethod(command);
-//        } catch (Throwable e) {
-//            Method method = getClass().getMethod("informAboutInvalidCommand");
-//        }
-//        return method;
-//    }
-
-    void parseCommand(CommandExecutor commandExecutor, String command) {
-        var splitCommand = command.split(" ");
+    void parseCommand(String command) {
+        String[] splitCommand = command.split(" ");
         try {
             if (splitCommand.length > 2) {
                 throw new RuntimeException();
             }
             switch (splitCommand[0]) {
-                case ("exit") -> {
+                case ("info"): {
+                    if (splitCommand.length > 1) {
+                        throw new RuntimeException();
+                    } else commandExecutor.info();
+                    break;
+                }
+                case ("exit"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
                     } else commandExecutor.exit();
+                    break;
                 }
-                case ("help") -> {
+                case ("help"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
                     } else commandExecutor.help();
+                    break;
                 }
-                case ("save") -> {
+                case ("save"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.save(moviesHashtable);
+                    } else commandExecutor.save();
+                    break;
                 }
-                case ("clear") -> {
+                case ("clear"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.clear(moviesHashtable);
+                    } else commandExecutor.clear();
+                    break;
                 }
-                case ("show") -> {
+                case ("show"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
                     } else commandExecutor.show();
+                    break;
                 }
-                case ("remove_lower") -> {
+                case ("remove_lower"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
                     } else commandExecutor.removeLower();
+                    break;
                 }
-                case ("sum_of_oscars_count") -> {
+                case ("sum_of_oscars_count"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
                     } else commandExecutor.sumOfOscarsCount();
+                    break;
                 }
-                case ("insert") -> commandExecutor.insert(Integer.parseInt(splitCommand[1]));
-                case ("update") -> commandExecutor.update(Integer.parseInt(splitCommand[1]));
-                case ("remove") -> commandExecutor.remove(Integer.parseInt(splitCommand[1]));
-                case ("remove_greater_key") -> commandExecutor.removeGreaterKey(Integer.parseInt(splitCommand[1]));
-                case ("replace_if_greater") -> commandExecutor.replaceIfGreater(Integer.parseInt(splitCommand[1]));
-                case ("filter_greater_than_oscars_count") -> commandExecutor.filterGreaterThanOscarsCount(Integer.parseInt(splitCommand[1]));
-                case ("filter_starts_with_name") -> commandExecutor.filterStartsWithName(splitCommand[1]);
-                default -> commandExecutor.informAboutInvalidCommand();
+                case ("insert"):
+                    commandExecutor.insert(Integer.parseInt(splitCommand[1]));
+                    break;
+                case ("update"):
+                    commandExecutor.update(Integer.parseInt(splitCommand[1]));
+                    break;
+                case ("remove"):
+                    commandExecutor.remove(Integer.parseInt(splitCommand[1]));
+                    break;
+                case ("remove_greater_key"):
+                    commandExecutor.removeGreaterKey(Integer.parseInt(splitCommand[1]));
+                    break;
+                case ("replace_if_greater"):
+                    commandExecutor.replaceIfGreater(Integer.parseInt(splitCommand[1]));
+                    break;
+                case ("filter_greater_than_oscars_count"):
+                    commandExecutor.filterGreaterThanOscarsCount(Integer.parseInt(splitCommand[1]));
+                    break;
+                case ("filter_starts_with_name"):
+                    commandExecutor.filterStartsWithName(splitCommand[1]);
+                    break;
+                case ("execute_script"):
+                    commandExecutor.executeScript(splitCommand[1]);
+                    break;
+                default:
+                    commandExecutor.informAboutInvalidCommand();
             }
         } catch (Throwable e) {
-            e.printStackTrace();
-            //informAboutInvalidCommand();
+            commandExecutor.informAboutInvalidCommand();
         }
     }
 
+    private String readPersonName(Scanner in) {
+        System.out.print("Enter director's name>");
+        String name = in.nextLine();
+        while (name.equals("")) {
+            System.out.println("Invalid name. Try again");
+            System.out.print("Enter director's name>");
+            name = in.nextLine();
+        }
+        return name;
+    }
 
     String[] inputMovieData() {
         Scanner in = new Scanner(System.in);
         String[] data = new String[8];
-        for (int i = 0; i < 8; i++) {
-            data[i] = "";
-        }
         data[1] = inputMovieName(in);
         data[2] = inputMovieCoordinates(in);
         Calendar calendar = Calendar.getInstance();
@@ -117,11 +141,11 @@ public class CommandParser {
         while (true) {
             System.out.print("Enter director's eye color (GREEN, RED, ORANGE, YELLOW, WHITE)>");
             eyeColor = in.nextLine();
-            if (!eyeColor.equals("GREEN")
-                    && !eyeColor.equals("RED")
-                    && !eyeColor.equals("ORANGE")
-                    && !eyeColor.equals("YELLOW")
-                    && !eyeColor.equals("WHITE")
+            if (eyeColor.equals("GREEN")
+                    || eyeColor.equals("RED")
+                    || eyeColor.equals("ORANGE")
+                    || eyeColor.equals("YELLOW")
+                    || eyeColor.equals("WHITE")
             ) {
                 break;
             }
@@ -135,11 +159,11 @@ public class CommandParser {
         while (true) {
             System.out.print("Enter director's hair color (GREEN, RED, ORANGE, YELLOW, WHITE)>");
             hairColor = in.nextLine();
-            if (!hairColor.equals("GREEN")
-                    && !hairColor.equals("RED")
-                    && !hairColor.equals("ORANGE")
-                    && !hairColor.equals("YELLOW")
-                    && !hairColor.equals("WHITE")
+            if (hairColor.equals("GREEN")
+                    || hairColor.equals("RED")
+                    || hairColor.equals("ORANGE")
+                    || hairColor.equals("YELLOW")
+                    || hairColor.equals("WHITE")
             ) {
                 break;
             }
@@ -153,11 +177,11 @@ public class CommandParser {
         while (true) {
             System.out.print("Enter director's nationality (ITALY, JAPAN, VATICAN, UNITED_KINGDOM, SPAIN)>");
             nationality = in.nextLine();
-            if (!nationality.equals("ITALY")
-                    && !nationality.equals("JAPAN")
-                    && !nationality.equals("VATICAN")
-                    && !nationality.equals("UNITED_KINGDOM")
-                    && !nationality.equals("SPAIN")
+            if (nationality.equals("ITALY")
+                    || nationality.equals("JAPAN")
+                    || nationality.equals("VATICAN")
+                    || nationality.equals("UNITED_KINGDOM")
+                    || nationality.equals("SPAIN")
             ) {
                 break;
             }
@@ -180,7 +204,7 @@ public class CommandParser {
                 if (10 > passportId.length() || passportId.length() >= 50) {
                     throw new RuntimeException();
                 }
-                Person personToCompare = personsHashtable.get(passportId);
+                Person personToCompare = commandExecutor.getPersonsHashtable().get(passportId);
                 if (personToCompare != null && (
                         !name.equals(personToCompare.getName())
                                 || !eyeColor.equals(personToCompare.getEyeColor().toString())

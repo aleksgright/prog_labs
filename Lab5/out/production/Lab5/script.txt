@@ -1,0 +1,25 @@
+help
+show
+remove 1
+insert 2
+qwerty
+3 5
+6
+THRILLER
+G
+pogchamp
+RED
+RED
+JAPAN
+poghampspassportID
+remove_lower
+qwerty
+3 5
+6
+THRILLER
+G
+pogchamp
+RED
+RED
+JAPAN
+poghamwpspassportID
