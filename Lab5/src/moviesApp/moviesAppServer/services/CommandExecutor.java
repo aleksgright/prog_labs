@@ -1,8 +1,9 @@
-package moviesApp.services;
+package moviesApp.moviesAppServer.services;
 
-import moviesApp.entities.Movie;
-import moviesApp.entities.Person;
-import moviesApp.utils.MoviesAppException;
+import moviesApp.moviesAppServer.entities.Movie;
+import moviesApp.moviesAppServer.entities.Person;
+import moviesApp.utils.dtos.CommandDto;
+import moviesApp.utils.exceptions.MoviesAppException;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -18,15 +19,17 @@ public class CommandExecutor {
     private Hashtable<Integer, Movie> moviesHashtable;
     private Date initialisationDate;
     private ScriptParser scriptParser;
+    private Movie movieFromDto;
 
-    public CommandExecutor() {
-        fileService = new FileService();
-        movieStringConverter = new MovieStringConverter();
-    }
-
-    public void startRunning(Hashtable<Integer, Movie> moviesHashtable, Hashtable<String, Person> personsHashtable) {
+    public CommandExecutor(Hashtable<Integer, Movie> moviesHashtable, Hashtable<String, Person> personsHashtable) {
         this.personsHashtable = personsHashtable;
         this.moviesHashtable = moviesHashtable;
+        fileService = new FileService();
+        movieStringConverter = new MovieStringConverter();
+        commandParser = new CommandParser(this);
+    }
+
+    public void startRunning() {
         initialisationDate = new Date();
         commandParser = new CommandParser(this);
         scriptParser = new ScriptParser(this);
@@ -34,17 +37,32 @@ public class CommandExecutor {
         while (true) {
             System.out.print(">");
             String command = in.nextLine();
-            commandParser.parseCommand(command);
+            System.out.println(commandParser.parseCommand(command));
         }
     }
 
-    void info() {
-        System.out.println("Collection type: HashTable");
-        System.out.println("Creation date: " + initialisationDate);
-        System.out.println("Кол-во элементов: " + moviesHashtable.size());
+    public void parseCommand(String command) {
+        System.out.println(commandParser.parseCommand(command));
     }
 
-    void executeScript(String filePath) {
+    public String executeFromCommandDto(CommandDto commandDto) {
+        movieFromDto = commandDto.getMovie();
+        if (commandDto.getCommand().equals("exit")) {
+            save();
+            return "Client's session closed. Collection was saved.";
+        }
+        if (commandDto.getArgument() != null) {
+            return commandParser.parseCommand(commandDto.getCommand() + " " + commandDto.getArgument());
+        }
+        return commandParser.parseCommand(commandDto.getCommand());
+    }
+
+    public String info() {
+        return "Collection type: HashTable\n" + "Creation date: "
+                + initialisationDate + "\nКол-во элементов: " + moviesHashtable.size();
+    }
+
+    public String executeScript(String filePath) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String command;
@@ -66,6 +84,7 @@ public class CommandExecutor {
             e.printStackTrace();
             throw new MoviesAppException("Can not read the file");
         }
+        return "execute_script completed successfully";
     }
 
     private void removeDirectorByMoviesId(int id) {
@@ -82,82 +101,51 @@ public class CommandExecutor {
         }
     }
 
-    void filterGreaterThanOscarsCount(int oscarsCount) {
+    public String filterGreaterThanOscarsCount(int oscarsCount) {
         for (Movie movie : moviesHashtable.values()) {
             if (movie.getOscarsCount() > oscarsCount) {
                 System.out.println(movie);
             }
         }
+        return "filter_greater_than_oscars_count completed successfully";
     }
 
-    void show() {
+    public String show() {
+        StringBuilder result = new StringBuilder();
         for (Movie movie : moviesHashtable.values()) {
-            System.out.println(movie);
+            result.append(movie);
         }
+        return result.toString();
     }
 
-    void filterStartsWithName(String beginning) {
+    public String filterStartsWithName(String beginning) {
         for (Movie movie : moviesHashtable.values()) {
             if (movie.getName().indexOf(beginning) == 0) {
                 System.out.println(movie);
             }
         }
+        return "filter_starts_with_name completed successfully";
     }
 
-    void sumOfOscarsCount() {
+    public String sumOfOscarsCount() {
         int result = 0;
         for (Movie movie : moviesHashtable.values()) {
             result += movie.getOscarsCount();
         }
         System.out.println(result);
+        return "sum_of_oscars_count completed successfully";
     }
 
-    void removeGreaterKey(int id) {
+    public String removeGreaterKey(int id) {
         int size = moviesHashtable.size();
         for (int i = id + 1; i <= size; i++) {
             removeDirectorByMoviesId(i);
             moviesHashtable.remove(i);
         }
+        return "remove_greater_key completed successfully";
     }
 
-    void replaceIfGreater(int id) {
-        if (moviesHashtable.containsKey(id)) {
-            String[] movieData = commandParser.inputMovieData();
-            movieData[0] = String.valueOf(id);
-            Movie movieToUpdate = movieStringConverter.convertDataArrayToMovie(movieData);
-            if (movieToUpdate.compareTo(moviesHashtable.get(id)) > 0) {
-                removeDirectorByMoviesId(id);
-                moviesHashtable.replace(id, movieToUpdate);
-            }
-        } else {
-            System.out.println("No such id");
-        }
-    }
-
-    void removeLower() {
-        String[] movieData = commandParser.inputMovieData();
-        int size = moviesHashtable.size();
-        movieData[0] = String.valueOf(size + 1);
-        Movie movieToUpdate = movieStringConverter.convertDataArrayToMovie(movieData);
-        for (int i = 1; i <= size; i++) {
-            if (movieToUpdate.compareTo(moviesHashtable.get(i)) > 0) {
-                removeDirectorByMoviesId(i);
-                moviesHashtable.remove(i);
-            }
-        }
-        Set<Integer> keys = moviesHashtable.keySet();
-        List<Integer> keysArray = new ArrayList<>(keys);
-        keysArray.sort(Comparator.comparingInt(o -> o));
-        int currentPlace = 1;
-        for (int i : keysArray) {
-            Movie movie = moviesHashtable.remove(i);
-            movie.setId(currentPlace);
-            moviesHashtable.put(currentPlace, movie);
-            currentPlace++;
-        }
-    }
-
-    void remove(int id) {
+    public String remove(int id) {
         if (moviesHashtable.containsKey(id)) {
             removeDirectorByMoviesId(id);
             int size = moviesHashtable.size();
@@ -170,50 +158,21 @@ public class CommandExecutor {
         } else {
             System.out.println("No such id");
         }
+        return "remove completed successfully";
     }
 
-    void insert(int id) {
-        String[] movieData = commandParser.inputMovieData();
-        movieData[0] = String.valueOf(id);
-        Movie movieToInsert = movieStringConverter.convertDataArrayToMovie(movieData);
-        int size = moviesHashtable.size();
-        if (id > size) {
-            moviesHashtable.put(id, movieToInsert);
-        } else {
-            Movie replacedMovie = moviesHashtable.get(size);
-            replacedMovie.setId(replacedMovie.getId() + 1);
-            moviesHashtable.put(size + 1, replacedMovie);
-            for (int i = size; i > id; i--) {
-                replacedMovie = moviesHashtable.get(i - 1);
-                replacedMovie.setId(replacedMovie.getId() + 1);
-                moviesHashtable.replace(i, replacedMovie);
-            }
-            moviesHashtable.replace(id, movieToInsert);
-        }
-    }
-
-    void update(int id) {
-        if (moviesHashtable.containsKey(id)) {
-            String[] movieData = commandParser.inputMovieData();
-            movieData[0] = String.valueOf(id);
-            Movie movieToUpdate = movieStringConverter.convertDataArrayToMovie(movieData);
-            removeDirectorByMoviesId(id);
-            moviesHashtable.replace(id, movieToUpdate);
-        } else {
-            System.out.println("No such id");
-        }
-    }
-
-    void clear() {
+    public String clear() {
         moviesHashtable.clear();
+        return "clear completed successfully";
     }
 
-    void save() {
+    public String save() {
         fileService.write(moviesHashtable);
+        return "save completed successfully";
     }
 
-    void help() {
-        System.out.println("help : вывести справку по доступным командам\n" +
+    public String help() {
+        return "help : вывести справку по доступным командам\n" +
                 "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
                 "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +
                 "insert null {element} : добавить новый элемент с заданным ключом\n" +
@@ -228,22 +187,21 @@ public class CommandExecutor {
                 "remove_greater_key null : удалить из коллекции все элементы, ключ которых превышает заданный\n" +
                 "sum_of_oscars_count : вывести сумму значений поля oscarsCount для всех элементов коллекции\n" +
                 "filter_starts_with_name name : вывести элементы, значение поля name которых начинается с заданной подстроки\n" +
-                "filter_greater_than_oscars_count oscarsCount : вывести элементы, значение поля oscarsCount которых больше заданного");
+                "filter_greater_than_oscars_count oscarsCount : вывести элементы, значение поля oscarsCount которых больше заданного";
     }
 
-    void exit() {
+    public String exit() {
         System.exit(0);
+        return "exit completed successfully";
     }
 
-    void informAboutInvalidCommand() {
-        System.out.println("Invalid command. Enter help to see the list of possible commands");
+    public String informAboutInvalidCommand() {
+        return "Invalid command. Enter help to see the list of possible commands";
     }
 
-    void replaceIfGreater(int id, BufferedReader reader) {
+    public String replaceIfGreater(int id) {
         if (moviesHashtable.containsKey(id)) {
-            String[] movieData = scriptParser.readMovieData(reader);
-            movieData[0] = String.valueOf(id);
-            Movie movieToUpdate = movieStringConverter.convertDataArrayToMovie(movieData);
+            Movie movieToUpdate = getMovieFromConsoleOrCommandDto(id);
             if (movieToUpdate.compareTo(moviesHashtable.get(id)) > 0) {
                 removeDirectorByMoviesId(id);
                 moviesHashtable.replace(id, movieToUpdate);
@@ -251,13 +209,52 @@ public class CommandExecutor {
         } else {
             System.out.println("No such id");
         }
+        return "replace_if_greater completed successfully";
     }
 
-    void removeLower(BufferedReader reader) {
-        String[] movieData = scriptParser.readMovieData(reader);
+    public String replaceIfGreater(int id, BufferedReader reader) {
+        if (moviesHashtable.containsKey(id)) {
+            Movie movieToUpdate = getMovieFromScript(id + 1, reader);
+            if (movieToUpdate.compareTo(moviesHashtable.get(id)) > 0) {
+                removeDirectorByMoviesId(id);
+                moviesHashtable.replace(id, movieToUpdate);
+            }
+        } else {
+            System.out.println("No such id");
+        }
+        return "replace_if_greater completed successfully";
+    }
+
+    public String removeLower() {
         int size = moviesHashtable.size();
-        movieData[0] = String.valueOf(size + 1);
-        Movie movieToUpdate = movieStringConverter.convertDataArrayToMovie(movieData);
+        Movie movieToUpdate = getMovieFromConsoleOrCommandDto(size + 1);
+        for (int i = 1; i <= size; i++) {
+            if (movieToUpdate.compareTo(moviesHashtable.get(i)) > 0) {
+                removeDirectorByMoviesId(i);
+                moviesHashtable.remove(i);
+            }
+        }
+        Set<Integer> keys = moviesHashtable.keySet();
+        List<Integer> keysArray = new ArrayList<>(keys);
+        keysArray.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 - o2;
+            }
+        });
+        int currentPlace = 1;
+        for (int i : keysArray) {
+            Movie movie = moviesHashtable.remove(i);
+            movie.setId(currentPlace);
+            moviesHashtable.put(currentPlace, movie);
+            currentPlace++;
+        }
+        return "remove_lower completed successfully";
+    }
+
+    public String removeLower(BufferedReader reader) {
+        int size = moviesHashtable.size();
+        Movie movieToUpdate = getMovieFromScript(size + 1, reader);
         for (int i = 1; i <= size; i++) {
             if (movieToUpdate.compareTo(moviesHashtable.get(i)) > 0) {
                 removeDirectorByMoviesId(i);
@@ -274,12 +271,11 @@ public class CommandExecutor {
             moviesHashtable.put(currentPlace, movie);
             currentPlace++;
         }
+        return "remove_lower completed successfully";
     }
 
-    void insert(int id, BufferedReader reader) {
-        String[] movieData = scriptParser.readMovieData(reader);
-        movieData[0] = String.valueOf(id);
-        Movie movieToInsert = movieStringConverter.convertDataArrayToMovie(movieData);
+    public String insert(int id) {
+        Movie movieToInsert = getMovieFromConsoleOrCommandDto(id);
         int size = moviesHashtable.size();
         if (id > size) {
             moviesHashtable.put(id, movieToInsert);
@@ -294,18 +290,61 @@ public class CommandExecutor {
             }
             moviesHashtable.replace(id, movieToInsert);
         }
+        return "insert completed successfully";
     }
 
-    void update(int id, BufferedReader reader) {
+    public String insert(int id, BufferedReader reader) {
+        Movie movieToInsert = getMovieFromScript(id, reader);
+        int size = moviesHashtable.size();
+        if (id > size) {
+            moviesHashtable.put(id, movieToInsert);
+        } else {
+            Movie replacedMovie = moviesHashtable.get(size);
+            replacedMovie.setId(replacedMovie.getId() + 1);
+            moviesHashtable.put(size + 1, replacedMovie);
+            for (int i = size; i > id; i--) {
+                replacedMovie = moviesHashtable.get(i - 1);
+                replacedMovie.setId(replacedMovie.getId() + 1);
+                moviesHashtable.replace(i, replacedMovie);
+            }
+            moviesHashtable.replace(id, movieToInsert);
+        }
+        return "insert completed successfully";
+    }
+
+    public String update(int id) {
         if (moviesHashtable.containsKey(id)) {
-            String[] movieData = scriptParser.readMovieData(reader);
-            movieData[0] = String.valueOf(id);
-            Movie movieToUpdate = movieStringConverter.convertDataArrayToMovie(movieData);
             removeDirectorByMoviesId(id);
-            moviesHashtable.replace(id, movieToUpdate);
+            moviesHashtable.replace(id, getMovieFromConsoleOrCommandDto(id));
         } else {
             System.out.println("No such id");
         }
+        return "update completed successfully";
+    }
+
+    public String update(int id, BufferedReader reader) {
+        if (moviesHashtable.containsKey(id)) {
+            removeDirectorByMoviesId(id);
+            moviesHashtable.replace(id, getMovieFromScript(id, reader));
+        } else {
+            System.out.println("No such id");
+        }
+        return "update completed successfully";
+    }
+
+    private Movie getMovieFromConsoleOrCommandDto(int id) {
+        if (movieFromDto != null) {
+            return movieFromDto;
+        }
+        String[] movieData = commandParser.inputMovieData();
+        movieData[0] = String.valueOf(id);
+        return movieStringConverter.convertDataArrayToMovie(movieData);
+    }
+
+    private Movie getMovieFromScript(int id, BufferedReader reader) {
+        String[] movieData = scriptParser.readMovieData(reader);
+        movieData[0] = String.valueOf(id);
+        return movieStringConverter.convertDataArrayToMovie(movieData);
     }
 
     public Hashtable<Integer, Movie> getMoviesHashtable() {

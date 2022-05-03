@@ -1,7 +1,7 @@
-package moviesApp.services;
+package moviesApp.moviesAppServer.services;
 
-import moviesApp.entities.Person;
-import moviesApp.utils.MoviesAppException;
+import moviesApp.moviesAppServer.entities.Person;
+import moviesApp.utils.exceptions.MoviesAppException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -92,10 +92,11 @@ public class ScriptParser {
                     commandExecutor.filterStartsWithName(splitCommand[1]);
                     break;
                 default:
-                    commandExecutor.informAboutInvalidCommand();
+                    throw new MoviesAppException("");
             }
         } catch (Throwable e) {
-            throw new MoviesAppException("Invalid script");
+            System.out.println("Invalid script");
+            throw  new MoviesAppException("");
         }
     }
 

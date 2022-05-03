@@ -1,9 +1,11 @@
-package moviesApp.entities;
+package moviesApp.moviesAppServer.entities;
 
-import moviesApp.enums.Color;
-import moviesApp.enums.Country;
+import moviesApp.utils.enums.Color;
+import moviesApp.utils.enums.Country;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
     private String name; //Поле не может быть null, Строка не может быть пустой
     private String passportID; //Значение этого поля должно быть уникальным, Длина строки должна быть не меньше 10, Длина строки не должна быть больше 49, Поле может быть null
     private Color eyeColor; //Поле не может быть null

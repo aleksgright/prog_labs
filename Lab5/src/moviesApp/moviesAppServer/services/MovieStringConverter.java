@@ -1,13 +1,13 @@
-package moviesApp.services;
+package moviesApp.moviesAppServer.services;
 
-import moviesApp.entities.Movie;
-import moviesApp.entities.Person;
-import moviesApp.enums.Color;
-import moviesApp.enums.Country;
-import moviesApp.enums.MovieGenre;
-import moviesApp.enums.MpaaRating;
+import moviesApp.moviesAppServer.entities.Movie;
+import moviesApp.moviesAppServer.entities.Person;
+import moviesApp.utils.enums.Color;
+import moviesApp.utils.enums.Country;
+import moviesApp.utils.enums.MovieGenre;
+import moviesApp.utils.enums.MpaaRating;
 import moviesApp.utils.Coordinates;
-import moviesApp.utils.MoviesAppException;
+import moviesApp.utils.exceptions.MoviesAppException;
 
 import java.util.Date;
 import java.util.Hashtable;

@@ -1,7 +1,7 @@
-package moviesApp.services;
+package moviesApp.moviesAppServer.services;
 
-import moviesApp.entities.*;
-import moviesApp.utils.MoviesAppException;
+import moviesApp.moviesAppServer.entities.*;
+import moviesApp.utils.exceptions.MoviesAppException;
 
 import java.io.*;
 import java.util.Hashtable;

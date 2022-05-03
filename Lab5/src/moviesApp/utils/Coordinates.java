@@ -1,7 +1,9 @@
 package moviesApp.utils;
 
-public class Coordinates {
-    private double x; //Максимальное значение поля: 393
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
+    private double x;
     private double y;
 
     public Coordinates(double x, double y) {

@@ -1,17 +1,21 @@
-package moviesApp.services;
+package moviesApp.moviesAppServer.services;
 
-import moviesApp.entities.Person;
+import moviesApp.moviesAppServer.entities.Person;
+import moviesApp.moviesAppServer.services.CommandExecutor;
 
 import java.util.*;
 
 public class CommandParser {
-    private final CommandExecutor commandExecutor;
+    private CommandExecutor commandExecutor;
+
+    public CommandParser() {
+    }
 
     public CommandParser(CommandExecutor commandExecutor) {
         this.commandExecutor = commandExecutor;
     }
 
-    void parseCommand(String command) {
+    public String parseCommand(String command) {
         String[] splitCommand = command.split(" ");
         try {
             if (splitCommand.length > 2) {
@@ -21,80 +25,64 @@ public class CommandParser {
                 case ("info"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.info();
-                    break;
+                    } else return commandExecutor.info();
                 }
                 case ("exit"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.exit();
-                    break;
+                    } else return commandExecutor.exit();
                 }
                 case ("help"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.help();
-                    break;
+                    } else return commandExecutor.help();
                 }
                 case ("save"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.save();
-                    break;
+                    } else return commandExecutor.save();
                 }
                 case ("clear"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.clear();
-                    break;
+                    } else return commandExecutor.clear();
                 }
                 case ("show"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.show();
-                    break;
+                    } else return commandExecutor.show();
                 }
                 case ("remove_lower"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.removeLower();
-                    break;
+                    } else return commandExecutor.removeLower();
                 }
                 case ("sum_of_oscars_count"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.sumOfOscarsCount();
-                    break;
+                    } else return commandExecutor.sumOfOscarsCount();
                 }
                 case ("insert"):
-                    commandExecutor.insert(Integer.parseInt(splitCommand[1]));
-                    break;
+                    return commandExecutor.insert(Integer.parseInt(splitCommand[1]));
                 case ("update"):
-                    commandExecutor.update(Integer.parseInt(splitCommand[1]));
-                    break;
+                    return commandExecutor.update(Integer.parseInt(splitCommand[1]));
                 case ("remove"):
-                    commandExecutor.remove(Integer.parseInt(splitCommand[1]));
-                    break;
+                    return commandExecutor.remove(Integer.parseInt(splitCommand[1]));
                 case ("remove_greater_key"):
-                    commandExecutor.removeGreaterKey(Integer.parseInt(splitCommand[1]));
-                    break;
+                    return commandExecutor.removeGreaterKey(Integer.parseInt(splitCommand[1]));
                 case ("replace_if_greater"):
-                    commandExecutor.replaceIfGreater(Integer.parseInt(splitCommand[1]));
-                    break;
+                    return commandExecutor.replaceIfGreater(Integer.parseInt(splitCommand[1]));
                 case ("filter_greater_than_oscars_count"):
-                    commandExecutor.filterGreaterThanOscarsCount(Integer.parseInt(splitCommand[1]));
-                    break;
+                    return commandExecutor.filterGreaterThanOscarsCount(Integer.parseInt(splitCommand[1]));
                 case ("filter_starts_with_name"):
-                    commandExecutor.filterStartsWithName(splitCommand[1]);
-                    break;
+                    return commandExecutor.filterStartsWithName(splitCommand[1]);
                 case ("execute_script"):
-                    commandExecutor.executeScript(splitCommand[1]);
-                    break;
+                    return commandExecutor.executeScript(splitCommand[1]);
                 default:
-                    commandExecutor.informAboutInvalidCommand();
+                    return commandExecutor.informAboutInvalidCommand();
             }
         } catch (Throwable e) {
-            commandExecutor.informAboutInvalidCommand();
+            return commandExecutor.informAboutInvalidCommand();
         }
     }
 
@@ -109,7 +97,7 @@ public class CommandParser {
         return name;
     }
 
-    String[] inputMovieData() {
+    public String[] inputMovieData() {
         Scanner in = new Scanner(System.in);
         String[] data = new String[8];
         data[1] = inputMovieName(in);

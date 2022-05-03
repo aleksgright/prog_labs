@@ -1,12 +1,13 @@
-package moviesApp.entities;
+package moviesApp.moviesAppServer.entities;
 
-import moviesApp.enums.MovieGenre;
-import moviesApp.enums.MpaaRating;
+import moviesApp.utils.enums.MovieGenre;
+import moviesApp.utils.enums.MpaaRating;
 import moviesApp.utils.Coordinates;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Movie implements Comparable<Movie> {
+public class Movie implements Comparable<Movie>, Serializable {
     private int id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -119,7 +120,7 @@ public class Movie implements Comparable<Movie> {
         result = result + "\toscarsCount: " + getOscarsCount() + "\n";
         result = result + "\tgenre: " + getGenre() + "\n";
         result = result + "\tmpaaRating: " + getMpaaRating() + "\n";
-        result = result + "\tdirector: \"" + getDirector() + "\"";
+        result = result + "\tdirector: \"" + getDirector() + "\"\n";
         return result;
     }
 
