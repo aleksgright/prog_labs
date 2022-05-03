@@ -1,98 +1,69 @@
-package moviesApp.moviesAppServer.services;
+package moviesApp.moviesAppClient;
 
+import moviesApp.moviesAppServer.entities.Movie;
 import moviesApp.moviesAppServer.entities.Person;
+import moviesApp.moviesAppServer.services.CommandExecutor;
+import moviesApp.moviesAppServer.services.MovieStringConverter;
+import moviesApp.utils.dtos.CommandDto;
 import moviesApp.utils.exceptions.MoviesAppException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Calendar;
 
-public class ScriptParser {
-    private final CommandExecutor commandExecutor;
+public class ClientsScriptParser {
+    private final MovieStringConverter movieStringConverter;
 
-    public ScriptParser(CommandExecutor commandExecutor) {
-        this.commandExecutor = commandExecutor;
+    public ClientsScriptParser() {
+        movieStringConverter = new MovieStringConverter();
     }
 
 
-    void parseCommand(String command, BufferedReader reader) throws MoviesAppException {
+    public CommandDto parseCommand(String command, BufferedReader reader) {
         String[] splitCommand = command.split(" ");
+        CommandDto commandDto = new CommandDto();
+        commandDto.setCommand(splitCommand[0]);
         try {
             if (splitCommand.length > 2) {
                 throw new RuntimeException();
             }
             switch (splitCommand[0]) {
-                case ("info"): {
-                    if (splitCommand.length > 1) {
-                        throw new RuntimeException();
-                    } else commandExecutor.info();
-                    break;
-                }
-                case ("exit"): {
-                    if (splitCommand.length > 1) {
-                        throw new RuntimeException();
-                    } else commandExecutor.exit();
-                    break;
-                }
-                case ("help"): {
-                    if (splitCommand.length > 1) {
-                        throw new RuntimeException();
-                    } else commandExecutor.help();
-                    break;
-                }
-                case ("save"): {
-                    if (splitCommand.length > 1) {
-                        throw new RuntimeException();
-                    } else commandExecutor.save();
-                    break;
-                }
-                case ("clear"): {
-                    if (splitCommand.length > 1) {
-                        throw new RuntimeException();
-                    } else commandExecutor.clear();
-                    break;
-                }
+                case ("info"):
+                case ("sum_of_oscars_count"):
+                case ("clear"):
+                case ("help"):
+                case ("exit"):
                 case ("show"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.show();
-                    break;
+                    } else return commandDto;
                 }
                 case ("remove_lower"): {
                     if (splitCommand.length > 1) {
                         throw new RuntimeException();
-                    } else commandExecutor.removeLower(reader);
-                    break;
-                }
-                case ("sum_of_oscars_count"): {
-                    if (splitCommand.length > 1) {
-                        throw new RuntimeException();
-                    } else commandExecutor.sumOfOscarsCount();
-                    break;
+                    }
+                    commandDto.setMovie(getMovieFromScript(0, reader));
+                    return commandDto;
                 }
                 case ("insert"):
-                    commandExecutor.insert(Integer.parseInt(splitCommand[1]), reader);
-                    break;
                 case ("update"):
-                    commandExecutor.update(Integer.parseInt(splitCommand[1]), reader);
-                    break;
-                case ("remove"):
-                    commandExecutor.remove(Integer.parseInt(splitCommand[1]));
-                    break;
-                case ("remove_greater_key"):
-                    commandExecutor.removeGreaterKey(Integer.parseInt(splitCommand[1]));
-                    break;
                 case ("replace_if_greater"):
-                    commandExecutor.replaceIfGreater(Integer.parseInt(splitCommand[1]), reader);
-                    break;
-                case ("filter_greater_than_oscars_count"):
-                    commandExecutor.filterGreaterThanOscarsCount(Integer.parseInt(splitCommand[1]));
-                    break;
-                case ("filter_starts_with_name"):
-                    commandExecutor.filterStartsWithName(splitCommand[1]);
-                    break;
+                    int id = Integer.parseInt(splitCommand[1]);
+                    commandDto.setArgument(splitCommand[1]);
+                    commandDto.setMovie(getMovieFromScript(id, reader));
+                    return commandDto;
+                case ("remove"):
+                case ("remove_greater_key"):
+                case ("filter_greater_than_oscars_count"): {
+                    commandDto.setArgument(String.valueOf(Integer.parseInt(splitCommand[1])));
+                    return commandDto;
+                }
+                case ("filter_starts_with_name"): {
+                    commandDto.setArgument(splitCommand[1]);
+                    return commandDto;
+                }
                 default:
-                    throw new MoviesAppException("");
+                    throw new MoviesAppException("Invalid command");
             }
         } catch (Throwable e) {
             System.out.println("Invalid script");
@@ -179,15 +150,6 @@ public class ScriptParser {
             if (10 > passportId.length() || passportId.length() >= 50) {
                 throw new RuntimeException();
             }
-            Person personToCompare = commandExecutor.getPersonsHashtable().get(passportId);
-            if (personToCompare != null && (
-                    !name.equals(personToCompare.getName())
-                            || !eyeColor.equals(personToCompare.getEyeColor().toString())
-                            || !hairColor.equals(personToCompare.getHairColor().toString())
-                            || !nationality.equals(personToCompare.getNationality().toString())
-            )) {
-                throw new RuntimeException();
-            }
             return name + " " + passportId + " " + eyeColor + " " + hairColor + " " + nationality;
         } catch (Throwable e) {
             throw new MoviesAppException("Invalid director's passportId");
@@ -250,5 +212,11 @@ public class ScriptParser {
         } catch (Throwable e) {
             throw new MoviesAppException("Invalid movie coordinates");
         }
+    }
+
+    private Movie getMovieFromScript(int id, BufferedReader reader) {
+        String[] movieData = readMovieData(reader);
+        movieData[0] = String.valueOf(id);
+        return movieStringConverter.convertDataArrayToMovie(movieData);
     }
 }

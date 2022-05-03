@@ -8,15 +8,15 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
+import java.net.UnknownHostException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Client {
-    private static Socket clientSocket; //сокет для общения
-    private static BufferedReader reader; // нам нужен ридер читающий с консоли, иначе как
+    private static Socket clientSocket;
     private static String Ip;
-    // мы узнаем что хочет сказать клиент?
 
     public static void main(String[] args) {
         try {
@@ -25,62 +25,86 @@ public class Client {
                 Scanner scanner = new Scanner(System.in);
                 Ip = scanner.nextLine();
                 CommandDtoCreator commandDtoCreator = new CommandDtoCreator();
+                int connectionTries = 0;
                 boolean serverWasUp = false;
                 boolean f = true;
                 while (f) {
                     try {
-                        if (!serverWasUp) {
-                            System.out.println("Sending connection request...");
-                            serverWasUp = true;
+                        if (connectionTries > 500) {
+                            System.out.println("Waiting time exceeded");
+                            throw new MoviesAppException("Waiting time exceeded");
                         }
+                        if (connectionTries > 1) {
+                            System.out.println("Sending connection request...");
+                        }
+                        connectionTries++;
                         clientSocket = new Socket(Ip, 8790);
-                        if (!serverWasUp) {
+                        if (connectionTries>1) {
                             System.out.println("Connection is up");
                             serverWasUp = true;
                         }
-                        serverWasUp = true;
+                        connectionTries = 0;
                         System.out.print(">");
-                        String word = scanner.nextLine(); // ждём пока клиент что-нибудь
+                        String word = scanner.nextLine();
                         if ("exit".equals(word)) {
                             f = false;
                         }
-                        if (word.equals("execute_script")) {
-
-                        }
-                        // не напишет в консоль
-                        try {
-                            sendRequest(commandDtoCreator.parseCommand(word));
-                            readResponse();
-                        } catch (MoviesAppException e) {
-                            System.out.println("Invalid command");
+                        if (word.startsWith("exec")) {
+                            List<CommandDto> commandDtoList = new LinkedList<>();
+                            try (BufferedReader reader = new BufferedReader(new FileReader(word.split(" ")[1]))) {
+                                ClientsScriptParser clientsScriptParser = new ClientsScriptParser();
+                                String scriptCommand;
+                                while ((scriptCommand = reader.readLine()) != null) {
+                                    if (scriptCommand.equals("executeScript")) {
+                                        System.out.println("Inner scripts are not allowed");
+                                        break;
+                                    }
+                                    try {
+                                        commandDtoList.add(clientsScriptParser.parseCommand(scriptCommand, reader));
+                                    } catch (MoviesAppException e) {
+                                        break;
+                                    }
+                                }
+                            } catch (FileNotFoundException e) {
+                                throw new MoviesAppException("File not found");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                throw new MoviesAppException("Can not read the file");
+                            }
+                            clientSocket.close();
+                            sendListOfRequests(commandDtoList.iterator());
+                        } else {
+                            try {
+                                sendRequest(commandDtoCreator.parseCommand(word));
+                                readResponse();
+                            } catch (MoviesAppException e) {
+                                System.out.println("Invalid command");
+                            }
                         }
                     } catch (ConnectException e) {
-                        if (serverWasUp) {
-                            System.out.println("Сервер не запущен");
+                        if (connectionTries==1) {
+                            System.out.println("Server is not up");
                             serverWasUp = false;
                         }
                     } catch (SocketException e) {
-                        if (serverWasUp) {
-                            System.out.println("Сервер не отвечает");
+                        if (connectionTries==1) {
+                            System.out.println("Server does not respond");
                             serverWasUp = false;
                         }
-//                    String serverWord = in.readLine(); // ждём, что скажет сервер
-//                    System.out.println(serverWord); // получив - выводим на экран
                     }
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            } finally { // в любом случае необходимо закрыть сокет и потоки
-                System.out.println("Клиент был закрыт...");
+            } catch (UnknownHostException e) {
+                System.out.println("Invalid host");
+            } catch (Throwable ignored) {
+            } finally {
+                System.out.println("Client was closed");
                 try {
                     clientSocket.close();
                 } catch (NullPointerException ignored) {
                 }
             }
-        } catch (IOException e) {
-            System.err.println(e);
+        } catch (IOException ignored) {
         }
-
     }
 
     private static void sendRequest(CommandDto commandDto) throws IOException {
@@ -89,7 +113,6 @@ public class Client {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
         objectOutputStream.writeObject(commandDto);
         byteArrayOutputStream.writeTo(outputStream);
-        System.out.println("Request sent");
     }
 
     private static void readResponse() throws IOException, ClassNotFoundException {
@@ -97,7 +120,43 @@ public class Client {
         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
         ResponseDto responseDto = (ResponseDto) objectInputStream.readObject();
         inputStream.close();
-        System.out.println("Response received");
         responseDto.printMessages();
+    }
+
+    private static void sendListOfRequests(Iterator<CommandDto> iterator) {
+        boolean serverWasUp = true;
+        boolean f = true;
+        while (f) {
+            try {
+                if (!serverWasUp) {
+                    System.out.println("Sending connection request...");
+                }
+                clientSocket = new Socket(Ip, 8790);
+                if (!serverWasUp) {
+                    System.out.println("Connection is up");
+                    serverWasUp = true;
+                }
+                CommandDto commandDto = iterator.next();
+                try {
+                    sendRequest(commandDto);
+                    readResponse();
+                } catch (ConnectException e) {
+                    if (serverWasUp) {
+                        System.out.println("Сервер не запущен");
+                        serverWasUp = false;
+                    }
+                } catch (SocketException e) {
+                    if (serverWasUp) {
+                        System.out.println("Сервер не отвечает");
+                        serverWasUp = false;
+                    }
+                }
+                if (!iterator.hasNext()) {
+                    f = false;
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println(e);
+            }
+        }
     }
 }

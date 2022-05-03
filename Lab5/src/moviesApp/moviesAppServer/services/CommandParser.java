@@ -86,17 +86,6 @@ public class CommandParser {
         }
     }
 
-    private String readPersonName(Scanner in) {
-        System.out.print("Enter director's name>");
-        String name = in.nextLine();
-        while (name.equals("")) {
-            System.out.println("Invalid name. Try again");
-            System.out.print("Enter director's name>");
-            name = in.nextLine();
-        }
-        return name;
-    }
-
     public String[] inputMovieData() {
         Scanner in = new Scanner(System.in);
         String[] data = new String[8];

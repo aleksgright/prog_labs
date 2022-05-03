@@ -41,7 +41,6 @@ public class FileService {
             }
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new MoviesAppException("Can not read the file");
         }
     }
@@ -70,7 +69,6 @@ public class FileService {
             }
             fileOutputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new MoviesAppException("Cannot write in file");
         }
     }

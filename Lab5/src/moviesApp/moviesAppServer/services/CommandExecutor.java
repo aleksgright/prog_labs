@@ -41,10 +41,6 @@ public class CommandExecutor {
         }
     }
 
-    public void parseCommand(String command) {
-        System.out.println(commandParser.parseCommand(command));
-    }
-
     public String executeFromCommandDto(CommandDto commandDto) {
         movieFromDto = commandDto.getMovie();
         if (commandDto.getCommand().equals("exit")) {
@@ -63,8 +59,7 @@ public class CommandExecutor {
     }
 
     public String executeScript(String filePath) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))){
             String command;
             while ((command = reader.readLine()) != null) {
                 if (command.equals("executeScript")) {
@@ -77,7 +72,6 @@ public class CommandExecutor {
                     break;
                 }
             }
-            reader.close();
         } catch (FileNotFoundException e) {
             throw new MoviesAppException("File not found");
         } catch (IOException e) {
@@ -89,25 +83,30 @@ public class CommandExecutor {
 
     private void removeDirectorByMoviesId(int id) {
         String personToRemovePassportId = moviesHashtable.get(id).getDirector().getPassportID();
-        int count = 0;
-        Collection<Movie> movies = moviesHashtable.values();
-        for (Movie movie : movies) {
-            if (movie.getDirector().getPassportID().equals(personToRemovePassportId)) {
-                count++;
-            }
-        }
-        if (count <= 1) {
+//        int count = 0;
+//        Collection<Movie> movies = moviesHashtable.values();
+//        for (Movie movie : movies) {
+//            if (movie.getDirector().getPassportID().equals(personToRemovePassportId)) {
+//                count++;
+//            }
+//        }
+        if (moviesHashtable.values()
+                .stream()
+                .filter(movie -> movie.getDirector().getPassportID().equals(personToRemovePassportId))
+                .count()<=1
+        ) {
             personsHashtable.remove(personToRemovePassportId);
         }
     }
 
     public String filterGreaterThanOscarsCount(int oscarsCount) {
+        StringBuilder result = new StringBuilder();
         for (Movie movie : moviesHashtable.values()) {
             if (movie.getOscarsCount() > oscarsCount) {
-                System.out.println(movie);
+                result.append(movie);
             }
         }
-        return "filter_greater_than_oscars_count completed successfully";
+        return result.toString();
     }
 
     public String show() {
@@ -119,21 +118,17 @@ public class CommandExecutor {
     }
 
     public String filterStartsWithName(String beginning) {
+        StringBuilder result = new StringBuilder();
         for (Movie movie : moviesHashtable.values()) {
             if (movie.getName().indexOf(beginning) == 0) {
-                System.out.println(movie);
+                result.append(movie);
             }
         }
-        return "filter_starts_with_name completed successfully";
+        return result.toString();
     }
 
     public String sumOfOscarsCount() {
-        int result = 0;
-        for (Movie movie : moviesHashtable.values()) {
-            result += movie.getOscarsCount();
-        }
-        System.out.println(result);
-        return "sum_of_oscars_count completed successfully";
+        return String.valueOf(moviesHashtable.values().stream().mapToInt(Movie::getOscarsCount).sum());
     }
 
     public String removeGreaterKey(int id) {

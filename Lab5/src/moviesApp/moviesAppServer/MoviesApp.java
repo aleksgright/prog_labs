@@ -2,6 +2,7 @@ package moviesApp.moviesAppServer;
 
 import moviesApp.moviesAppServer.entities.Movie;
 import moviesApp.moviesAppServer.entities.Person;
+import moviesApp.moviesAppServer.services.CommandExecutor;
 import moviesApp.moviesAppServer.services.FileService;
 
 import java.util.Hashtable;
@@ -19,9 +20,10 @@ public class MoviesApp {
             System.exit(0);
         }
         Server server = new Server(moviesTable, personsTable);
-        server.run();
-//        CommandExecutor commandExecutor = new CommandExecutor(moviesTable, personsTable);
-//        commandExecutor.startRunning();
+        Thread thread = new Thread(server);
+        thread.start();
+        CommandExecutor commandExecutor = new CommandExecutor(moviesTable, personsTable);
+        commandExecutor.startRunning();
         //        System.out.println(moviesTable);
     }
 }

@@ -1,7 +1,6 @@
 help
 show
 remove 1
-execute_script C:\Studying\prog_labs\Lab5\src\script.txt
 insert 2
 qwerty
 3 5

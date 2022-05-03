@@ -5,6 +5,10 @@ import moviesApp.moviesAppServer.services.MovieStringConverter;
 import moviesApp.utils.dtos.CommandDto;
 import moviesApp.utils.exceptions.MoviesAppException;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -54,7 +58,6 @@ public class CommandDtoCreator {
                     commandDto.setArgument(String.valueOf(Integer.parseInt(splitCommand[1])));
                     return commandDto;
                 }
-                case ("execute_script"):
                 case ("filter_starts_with_name"): {
                     commandDto.setArgument(splitCommand[1]);
                     return commandDto;
@@ -65,17 +68,6 @@ public class CommandDtoCreator {
         } catch (Throwable e) {
             throw new MoviesAppException("Invalid command");
         }
-    }
-
-    private String readPersonName(Scanner in) {
-        System.out.print("Enter director's name>");
-        String name = in.nextLine();
-        while (name.equals("")) {
-            System.out.println("Invalid name. Try again");
-            System.out.print("Enter director's name>");
-            name = in.nextLine();
-        }
-        return name;
     }
 
     public String[] inputMovieData() {
