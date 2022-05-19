@@ -4,7 +4,71 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91762c33-1766-4bd2-94b5-ce5dd458efb6" name="Changes" comment="minor fixes" />
+    <list default="true" id="91762c33-1766-4bd2-94b5-ce5dd458efb6" name="Changes" comment="minor fixes">
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/artifacts/Client_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/artifacts/Server_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/Lab5.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/artifacts/Client_jar/Client.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/artifacts/Lab5_jar/Lab5.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/artifacts/Server_jar/Server.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/MoviesData.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/metaForClient/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/metaForServer/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppClient/Client.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppClient/ClientsScriptParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppClient/CommandDtoCreator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppClient/script.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/MoviesApp.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/Server.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/entities/Movie.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/entities/Person.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/services/CommandExecutor$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/services/CommandExecutor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/services/CommandParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/services/FileService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/services/MovieStringConverter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/moviesAppServer/services/ScriptParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/Coordinates.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/dtos/CommandDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/dtos/ResponseDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/enums/Color.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/enums/Country.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/enums/MovieGenre.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/enums/MpaaRating.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/moviesApp/utils/exceptions/MoviesAppException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/out/production/Lab5/script.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/MoviesData.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/metaForClient/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/metaForServer/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppClient/Client.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppClient/ClientsScriptParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppClient/CommandDtoCreator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppClient/script.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/MoviesApp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/Server.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/entities/Movie.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/entities/Person.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/services/CommandExecutor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/services/CommandParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/services/FileService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/services/MovieStringConverter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/moviesAppServer/services/ScriptParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/Coordinates.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/dtos/CommandDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/dtos/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/enums/Color.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/enums/Country.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/enums/MovieGenre.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/enums/MpaaRating.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/moviesApp/utils/exceptions/MoviesAppException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Lab5/src/script.txt" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +91,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PetProject" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ClientServerApplication" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -44,6 +108,7 @@
       <updated>1643370467421</updated>
       <workItem from="1643370468663" duration="576000" />
       <workItem from="1643371137137" duration="768000" />
+      <workItem from="1652711806965" duration="34000" />
     </task>
     <task id="LOCAL-00001" summary="minor fixes">
       <created>1643371212877</created>
